@@ -550,7 +550,7 @@ class Service(_BaseService):
         # This message will be deleted once the server actually restarts.
         self.messages.create(name="restart_required", **msg)
         result = self.post("/services/server/control/restart")
-        if timeout is None: 
+        if timeout is None:
             return result
         start = datetime.now()
         diff = timedelta(seconds=timeout)
@@ -1624,7 +1624,7 @@ class Collection(ReadOnlyCollection):
                 and ``status``
 
         Example:
-        
+
         import splunklib.client
             s = client.service(...)
             saved_searches = s.saved_searches
@@ -1645,6 +1645,7 @@ class Collection(ReadOnlyCollection):
 
         """
         name = UrlEncoded(name, encode_slash=True)
+        print "splunklib call get: {url}".format(url=name)
         return super(Collection, self).get(name, owner, app, sharing, **query)
 
 
@@ -1678,7 +1679,7 @@ class Configurations(Collection):
         # The superclass implementation is designed for collections that contain
         # entities. This collection (Configurations) contains collections
         # (ConfigurationFile).
-        # 
+        #
         # The configurations endpoint returns multiple entities when we ask for a single file.
         # This screws up the default implementation of __getitem__ from Collection, which thinks
         # that multiple entities means a name collision, so we have to override it here.
@@ -1742,9 +1743,9 @@ class Stanza(Entity):
     """This class contains a single configuration stanza."""
 
     def submit(self, stanza):
-        """Adds keys to the current configuration stanza as a 
+        """Adds keys to the current configuration stanza as a
         dictionary of key-value pairs.
-        
+
         :param stanza: A dictionary of key-value pairs for the stanza.
         :type stanza: ``dict``
         :return: The :class:`Stanza` object.
@@ -1953,7 +1954,7 @@ class Index(Entity):
                    cookie_or_auth_header,
                    "X-Splunk-Input-Mode: Streaming\r\n",
                    "\r\n"]
-        
+
         for h in headers:
             sock.write(h)
         return sock
@@ -2389,6 +2390,7 @@ class Inputs(Collection):
             else:
                 subkinds = self._get_kind_list(subpath + [entry.title])
                 kinds.extend(subkinds)
+        print "kinds: ", kinds
         return kinds
 
     @property
@@ -3690,13 +3692,13 @@ class KVStoreCollectionData(object):
 
         :param dbqueries: Array of individual queries as dictionaries
         :type dbqueries: ``array`` of ``dict``
-        
+
         :return: Results of each query
         :rtype: ``array`` of ``array``
         """
-        if len(dbqueries) < 1: 
+        if len(dbqueries) < 1:
             raise Exception('Must have at least one query.')
-        
+
         data = json.dumps(dbqueries)
 
         return json.loads(self._post('batch_find', headers=KVStoreCollectionData.JSON_HEADER, body=data).body.read())
@@ -3707,13 +3709,13 @@ class KVStoreCollectionData(object):
 
         :param documents: Array of documents to save as dictionaries
         :type documents: ``array`` of ``dict``
-        
+
         :return: Results of update operation as overall stats
         :rtype: ``dict``
         """
-        if len(documents) < 1: 
+        if len(documents) < 1:
             raise Exception('Must have at least one document.')
-        
+
         data = json.dumps(documents)
 
         return json.loads(self._post('batch_save', headers=KVStoreCollectionData.JSON_HEADER, body=data).body.read())
